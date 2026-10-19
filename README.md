@@ -35,6 +35,27 @@ ChatAppPart1/
 └── pom.xml
 ```
 
+## Screenshots
+<img width="996" height="450" alt="BACB7AD5-EEF1-4793-8549-2E0263F548C0" src="https://github.com/user-attachments/assets/1fd52a80-7720-49de-9d9f-7bfe2678f1b6" />  
+
+
+<img width="922" height="452" alt="601832BB-404D-497F-ACA9-0D33B0994EE9" src="https://github.com/user-attachments/assets/70008100-9d23-446c-b6b6-cf155cbe15ec" /> 
+
+
+<img width="964" height="298" alt="8B72FDE6-18E8-48BA-9C0E-BC954AFB9E09_4_5005_c" src="https://github.com/user-attachments/assets/4f6bd661-353d-483d-bcbb-53080df6e1f0" /> 
+
+
+<img width="700" height="334" alt="6A264371-EDFC-4FA1-8C8E-62A4C87F9F74_4_5005_c" src="https://github.com/user-attachments/assets/44e0d694-b86c-4e1e-9aff-acb91caa330d" /> 
+
+
+<img width="684" height="420" alt="C6030762-C8F5-49F1-909B-C8C66BA0C527" src="https://github.com/user-attachments/assets/dd9801d1-ed2f-49b6-802e-832844e09e10" /> 
+
+
+<img width="1480" height="520" alt="3B7E2672-5576-4362-AF06-DCD23557A9D9" src="https://github.com/user-attachments/assets/e446933b-83ef-4663-a91c-3096f9232275" /> 
+
+
+
+
 ## Requirements
 
 - Apache NetBeans with Maven support.
