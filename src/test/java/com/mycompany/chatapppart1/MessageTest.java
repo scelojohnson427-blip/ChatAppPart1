@@ -1,9 +1,16 @@
 package com.mycompany.chatapppart1;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 class MessageTest {
+
+    @TempDir
+    Path temporaryDirectory;
 
     @Test
     void testMessageIDIsValid() {
@@ -15,6 +22,7 @@ class MessageTest {
 
         assertTrue(message.checkMessageID());
         assertEquals(10, message.getMessageID().length());
+        assertTrue(message.getMessageID().startsWith("01"));
     }
 
     @Test
@@ -112,23 +120,75 @@ class MessageTest {
         );
 
         assertEquals(
-                "Press 0 to delete the message.",
+                "Message successfully disregarded.",
                 message.SentMessage(2)
         );
     }
 
     @Test
-    void testStoreMessage() {
+    void testStoreMessage() throws IOException {
+        Path storageFile = temporaryDirectory.resolve("stored_messages.json");
+        String previousPath = System.getProperty("quickchat.storage.file");
+        System.setProperty("quickchat.storage.file", storageFile.toString());
         Message message = new Message(
                 3,
                 "+27718693002",
                 "This message will be stored."
         );
 
-        assertEquals(
-                "Message successfully stored.",
-                message.SentMessage(3)
-        );
+        try {
+            assertEquals("Message successfully stored.", message.SentMessage(3));
+            String storedJson = Files.readString(storageFile);
+            assertTrue(storedJson.startsWith("["));
+            assertTrue(storedJson.trim().endsWith("]"));
+            assertTrue(storedJson.contains("\"message\":\"This message will be stored.\""));
+        } finally {
+            restoreStorageProperty(previousPath);
+        }
+    }
+
+    @Test
+    void testStoreMessageEscapesJsonCharacters() throws IOException {
+        Path storageFile = temporaryDirectory.resolve("escaped_messages.json");
+        String previousPath = System.getProperty("quickchat.storage.file");
+        System.setProperty("quickchat.storage.file", storageFile.toString());
+
+        try {
+            Message message = new Message(1, "+27718693002", "Say \"hello\"\nagain");
+            assertEquals("Message successfully stored.", message.SentMessage(3));
+            String storedJson = Files.readString(storageFile);
+            assertTrue(storedJson.contains("Say \\\"hello\\\"\\nagain"));
+        } finally {
+            restoreStorageProperty(previousPath);
+        }
+    }
+
+    @Test
+    void testStoreMessageMigratesExistingJsonLines() throws IOException {
+        Path storageFile = temporaryDirectory.resolve("stored_messages.json");
+        Files.writeString(storageFile,
+                "{\"messageID\":\"1234567890\",\"message\":\"old\"}\n");
+        String previousPath = System.getProperty("quickchat.storage.file");
+        System.setProperty("quickchat.storage.file", storageFile.toString());
+
+        try {
+            Message message = new Message(2, "+27718693002", "new message");
+            assertEquals("Message successfully stored.", message.SentMessage(3));
+            String storedJson = Files.readString(storageFile);
+            assertTrue(storedJson.startsWith("["));
+            assertTrue(storedJson.contains("\"message\":\"old\""));
+            assertTrue(storedJson.contains("\"message\":\"new message\""));
+        } finally {
+            restoreStorageProperty(previousPath);
+        }
+    }
+
+    private void restoreStorageProperty(String previousPath) {
+        if (previousPath == null) {
+            System.clearProperty("quickchat.storage.file");
+        } else {
+            System.setProperty("quickchat.storage.file", previousPath);
+        }
     }
 
 }

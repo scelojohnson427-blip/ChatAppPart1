@@ -16,7 +16,7 @@ QuickChat is a Java console application for registering and logging in users and
 - Recipient validation and message-length validation.
 - Sending, disregarding, and storing messages.
 - A console entry point and application menu in `Main.java`.
-- JUnit test classes: `LoginTest.java` and `MessageTest.java`.
+- JUnit test classes: `MainTest.java`, `LoginTest.java`, and `MessageTest.java`.
 - A GitHub Actions workflow at `.github/workflows/maven.yml` for automated Maven checks.
 
 ## Project files
@@ -29,6 +29,7 @@ ChatAppPart1/
 │   ├── Login.java
 │   └── Message.java
 ├── src/test/java/com/mycompany/chatapppart1/
+│   ├── MainTest.java
 │   ├── LoginTest.java
 │   └── MessageTest.java
 └── pom.xml
@@ -37,7 +38,7 @@ ChatAppPart1/
 ## Requirements
 
 - Apache NetBeans with Maven support.
-- A JDK version supported by the project configuration in `pom.xml` and the GitHub Actions workflow. Check both settings before choosing a JDK; the exact required version should match those files.
+- JDK 17 (the Maven compiler configuration and GitHub Actions workflow both use Java 17).
 - Git, if you want to commit and push changes from your computer.
 
 ## Run the application in NetBeans
@@ -48,7 +49,7 @@ ChatAppPart1/
 4. Open `Main.java` and run the project using **Run Project** (or right-click the project and choose **Run**).
 5. Follow the prompts shown in the console.
 
-The exact prompts depend on the current `Main.java` implementation. Confirm that its startup flow and menu labels match the instructions for your assignment.
+After registration and login, the application displays a menu to send messages, show recently sent messages, or quit. For each message it asks for a recipient, message text, and whether to send, disregard, or store the message.
 
 ## Run the tests
 
@@ -58,7 +59,7 @@ In NetBeans, right-click the project and choose **Test**. Alternatively, open a 
 mvn test
 ```
 
-The test classes are `LoginTest.java` and `MessageTest.java`. The test command reports whether they pass in the current checkout; this README does not imply a particular test result.
+The test classes are `MainTest.java`, `LoginTest.java`, and `MessageTest.java`. Together they cover menu behavior, the message limit, message handling, and registration and login checks.
 
 ## GitHub Actions
 
@@ -66,26 +67,23 @@ The workflow in `.github/workflows/maven.yml` runs Maven checks when its configu
 
 ## Example menu flow
 
-The following is an illustrative flow, not a guarantee of the exact prompts or option numbers in the current source:
+The application menu is:
 
 ```text
-Register or log in
-Open the QuickChat menu
-Choose a message action: send, disregard, or store
-Exit
+1. Send Messages
+2. Show recently sent messages
+3. Quit
 ```
 
-Update this example to show the exact menu text and options from `Main.java` if your assignment requires a sample run.
+Each message has its own action menu: send, disregard, or store. The application asks once for the message limit and does not accept additional messages after that limit is reached.
 
 ## Assignment checks to confirm
 
 Before submission, compare the source and output with the Part 2 assignment rubric. In particular, confirm:
 
-- Which Java version and Maven commands are required by `pom.xml` and the workflow.
-- Whether the user specifies the number of messages at startup, and whether the application prevents processing more than that number after returning to the menu.
-- The exact menu options and any required message-count, message-ID, hash, recipient, or length rules.
-- Whether stored messages are persisted between application runs or only kept during one run.
-- The required GitHub Actions triggers and checks, and that the workflow succeeds on `KhanbanTasks`.
+- The required message ID and hash algorithms match the assignment specification.
+- The `stored_messages.json` file is included only if your submission instructions require a sample data file; the application creates or updates it when a message is stored.
+- The GitHub Actions workflow succeeds on `KhanbanTasks`.
 
 ## References
 
