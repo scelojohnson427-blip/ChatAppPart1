@@ -114,4 +114,4 @@ Use the references required by your assignment's referencing style. The official
 - JUnit 5 User Guide: <https://junit.org/junit5/docs/current/user-guide/>
 - Apache NetBeans: <https://netbeans.apache.org/>
 
-Add any course notes, prescribed readings, or other sources you actually used, in the format required by your institution. Do not list a source you did not consult.
+
