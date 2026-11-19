@@ -1,0 +1,8 @@
+# Mac system files
+.DS_Store
+
+# Maven generated files
+target/
+
+# NetBeans private settings
+nbproject/private/

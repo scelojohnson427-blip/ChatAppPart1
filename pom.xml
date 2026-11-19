@@ -19,15 +19,22 @@
 
     <dependencies>
 
-        <!-- JUnit 5 -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.13.1</version>
-            <scope>test</scope>
-        </dependency>
+    <!-- JUnit 5 -->
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.13.1</version>
+        <scope>test</scope>
+    </dependency>
 
-    </dependencies>
+    <!-- Gson for reading and writing JSON files -->
+    <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.11.0</version>
+    </dependency>
+
+</dependencies>
 
     <build>
 

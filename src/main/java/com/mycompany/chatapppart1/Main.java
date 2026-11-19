@@ -8,10 +8,12 @@ public class Main {
     private static final String REGISTRATION_SUCCESS = "User registered successfully.";
 
     public static void main(String[] args) {
-        try (Scanner scanner = new Scanner(System.in)) {
-            runQuickChat(scanner);
-        }
+    Message.loadStoredMessages();
+
+    try (Scanner scanner = new Scanner(System.in)) {
+        runQuickChat(scanner);
     }
+}
 
     private static void runQuickChat(Scanner scanner) {
         System.out.println("====================================");
@@ -54,71 +56,146 @@ public class Main {
         runMenu(scanner);
     }
 
-    static void runMenu(Scanner scanner) {
-        int numberOfMessages = 0;
-        int messagesProcessed = 0;
-        boolean messageLimitSet = false;
-        boolean running = true;
+    
+static void runMenu(Scanner scanner) {
+    int numberOfMessages = 0;
+    int messagesProcessed = 0;
+    boolean messageLimitSet = false;
+    boolean running = true;
 
-        while (running) {
-            System.out.println("\nPlease select an option:");
-            System.out.println("1. Send Messages");
-            System.out.println("2. Show recently sent messages");
-            System.out.println("3. Quit");
-            System.out.print("Enter your choice: ");
+    while (running) {
+        System.out.println("\nPlease select an option:");
+        System.out.println("1. Send Messages");
+        System.out.println("2. Show recently sent messages");
+        System.out.println("3. Quit");
+        System.out.println("4. Stored Messages");
+        System.out.print("Enter your choice: ");
 
-            switch (scanner.nextLine()) {
-                case "1":
-                    if (!messageLimitSet) {
-                        numberOfMessages = readPositiveInteger(
-                                scanner,
-                                "How many messages would you like to enter? ");
-                        messageLimitSet = true;
-                    }
+        switch (scanner.nextLine()) {
+            case "1":
+                if (!messageLimitSet) {
+                    numberOfMessages = readPositiveInteger(
+                            scanner,
+                            "How many messages would you like to enter? ");
+                    messageLimitSet = true;
+                }
 
-                    if (messagesProcessed >= numberOfMessages) {
-                        System.out.println("You have completed your message limit.");
-                        break;
-                    }
-
-                    // The outer for loop advances only after a message is processed.
-                    for (int messageNumber = messagesProcessed + 1;
-                            messageNumber <= numberOfMessages;
-                            messageNumber++) {
-                        boolean messageProcessed = false;
-
-                        // Invalid input restarts this message without using a slot.
-                        while (!messageProcessed) {
-                            messageProcessed = processOneMessage(scanner, messageNumber);
-                        }
-                        messagesProcessed = messageNumber;
-                    }
-
-                    System.out.println("\nYou have completed your message limit.");
-                    System.out.println("Total messages sent: "
-                            + Message.getTotalMessagesSent());
+                if (messagesProcessed >= numberOfMessages) {
+                    System.out.println("You have completed your message limit.");
                     break;
+                }
 
-                case "2":
-                    String sentMessages = Message.printMessages();
-                    if (sentMessages.isEmpty()) {
-                        System.out.println("No messages have been sent yet.");
-                    } else {
-                        System.out.println("\nRecently sent messages:");
-                        System.out.print(sentMessages);
+                for (int messageNumber = messagesProcessed + 1;
+                        messageNumber <= numberOfMessages;
+                        messageNumber++) {
+                    boolean messageProcessed = false;
+
+                    while (!messageProcessed) {
+                        messageProcessed = processOneMessage(scanner, messageNumber);
                     }
-                    break;
+                    messagesProcessed = messageNumber;
+                }
 
-                case "3":
-                    System.out.println("Thank you for using QuickChat. Goodbye!");
-                    running = false;
-                    break;
+                System.out.println("\nYou have completed your message limit.");
+                System.out.println("Total messages sent: "
+                        + Message.getTotalMessagesSent());
+                break;
 
-                default:
-                    System.out.println("Invalid option. Please select 1, 2 or 3.");
-            }
+            case "2":
+                String sentMessages = Message.printMessages();
+                if (sentMessages.isEmpty()) {
+                    System.out.println("No messages have been sent yet.");
+                } else {
+                    System.out.println("\nRecently sent messages:");
+                    System.out.print(sentMessages);
+                }
+                break;
+
+            case "3":
+                System.out.println("Thank you for using QuickChat. Goodbye!");
+                running = false;
+                break;
+
+            case "4":
+    System.out.println("Opening Stored Messages menu...");
+    runStoredMessagesMenu(scanner);
+    break;
+
+            default:
+                System.out.println("Invalid option. Please select 1, 2, 3 or 4.");
         }
     }
+}
+
+private static void runStoredMessagesMenu(Scanner scanner) {
+    boolean running = true;
+
+    while (running) {
+        System.out.println("\n===== STORED MESSAGES =====");
+        System.out.println("1. Display stored messages");
+        System.out.println("2. Display longest message");
+        System.out.println("3. Search by message ID");
+        System.out.println("4. Search messages by recipient");
+        System.out.println("5. Delete message by hash");
+        System.out.println("6. Display message report");
+        System.out.println("7. Return to main menu");
+        System.out.print("Enter your choice: ");
+System.out.flush();
+
+
+
+String choice = scanner.nextLine();
+
+
+
+switch (choice.trim()) {
+            case "1":
+    System.out.println("Option 1 selected successfully.");
+
+    String result = Message.displayStoredMessages();
+    
+
+    System.out.println("Stored messages result:");
+    System.out.println(result);
+
+    break;
+
+            case "2":
+                System.out.println(Message.displayLongestMessage());
+                break;
+
+            case "3":
+                System.out.print("Enter message ID: ");
+                String messageID = scanner.nextLine();
+                System.out.println(Message.searchMessageByID(messageID));
+                break;
+
+            case "4":
+                System.out.print("Enter recipient number: ");
+                String recipient = scanner.nextLine();
+                System.out.println(Message.searchMessagesByRecipient(recipient));
+                break;
+
+            case "5":
+                System.out.print("Enter message hash: ");
+                String hash = scanner.nextLine();
+                System.out.println(Message.deleteMessageByHash(hash));
+                break;
+
+            case "6":
+                System.out.println(Message.displayReport());
+                break;
+
+            case "7":
+                running = false;
+                break;
+
+            default:
+                System.out.println("Invalid option. Please select 1 to 7.");
+        }
+    }
+}
+
 
     private static boolean processOneMessage(Scanner scanner, int messageNumber) {
         System.out.println("\nPreparing message " + messageNumber);
